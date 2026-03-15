@@ -8,47 +8,36 @@ use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
-    public function index()
+     public function index()
     {
-        $departments = Department::all();
-        return response()->json($departments);
+         $departments=Department::all();
+         return response()->json($departments);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
         $department = Department::create($request->all());
         return response()->json($department, 201);
     }
 
-    public function show(Department $department)
+    public function show($id)
     {
+        $department=Department::find($id);
         return response()->json($department);
     }
 
-    public function update(Request $request, Department $department)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'string|max:255',
-        ]);
+        $department = Department::find($id);
         $department->update($request->all());
-        return response()->json($department);
+        return response()->json($department, 200);
     }
 
-    public function destroy(Department $department)
+    public function delete($id)
     {
+        $department = Department::find($id);
         $department->delete();
         return response()->json(null, 204);
     }
      
-    public function search(Request $request)
-    {
-        $searchTerm = $request->input('q');
-        $departments = Department::where('name', 'like', "%{$searchTerm}%")->get();
-        return response()->json($departments);
-    }
-    
-
 }

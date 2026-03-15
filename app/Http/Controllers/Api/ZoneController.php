@@ -8,9 +8,9 @@ use Illuminate\Http\Request;
 
 class ZoneController extends Controller
 {
-     public function index()
+    public function index()
     {
-        $zones = Zone::all();
+        $zones=Zone::all();
         return response()->json($zones);
     }
 
@@ -28,7 +28,7 @@ class ZoneController extends Controller
         $zones = Zone::where('region_id', $regionId)->get();
         return response()->json($zones);
     }
-
+     
     public function store(Request $request)
     {
         $request->validate($request, [
@@ -68,6 +68,14 @@ class ZoneController extends Controller
         $zones = Zone::with('region')->get();
         return response()->json($zones);
     }
-     
 
+    public function getZoneWithRegionById($id)
+    {
+        $zone = Zone::with('region')->find($id);
+        if (!$zone) {
+            return response()->json(['message' => 'Zone not found'], 404);
+        }
+        return response()->json($zone);
+    }
+    
 }

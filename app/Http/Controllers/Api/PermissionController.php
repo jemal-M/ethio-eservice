@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Permission;
+use App\Models\Role;
 use Illuminate\Http\Request;
 
 class PermissionController extends Controller
@@ -25,23 +26,42 @@ class PermissionController extends Controller
         $permission->delete();
         return response()->json(null, 204);
     }
-    public function update(Request $request, Permission $permission){
-           $request->validate(
-                  [
-                    'name'=>'required|string|unique:permissions,name,'.$permission->id,
-                    'role_id'=>'required'
-                  ]
-           );
-           $permission->update($request->all());
+    public function update(Request $request, Permission $permission)
+    {
+        $permission->update($request->all());
+        return response()->json($permission, 200);
     }
 
-    public function show(Permission $permission){
-           return response()->json($permission);
+    public function show(Permission $permission)
+    {
+          
+        return response()->json($permission);
+
     }
 
-    public function search($name){
-           $permission=Permission::where('name','like','%'.$name.'%')->get();
-           return response()->json($permission);
+    public function rolePermissions($role)
+    {
+        $role = Role::with('permissions')->where('name', $role)->first();
+        return response()->json($role->permissions);
+    }
+
+    public function permissionRoles($permission)
+    {
+        $permission = Permission::with('roles')->where('name', $permission)->first();
+        return response()->json($permission->roles);
+    }
+
+    public function attachPermission(Request $request, Role $role)
+    {
+        $role->permissions()->attach($request->permission_id);
+        return response()->json($role->permissions);
+    }
+
+    public function detachPermission(Role $role, Permission $permission)
+    {
+        $role->permissions()->detach($permission->id);
+        return response()->json($role->permissions);
     }
      
+       
 }

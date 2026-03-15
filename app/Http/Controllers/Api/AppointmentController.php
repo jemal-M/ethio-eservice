@@ -8,40 +8,32 @@ use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
 {
-    public function index(){
-        $appointments=Appointment::all();
+     public function index()
+    {
+        $appointments = Appointment::all();
         return response()->json($appointments);
     }
-
+   
     public function store(Request $request){
-        $request->validate([
-            'name'=>'required',
-            'email'=>'required|email',
-            'date'=>'required|date',
-            'service'=>'required'
-        ]);
         $appointment=Appointment::create($request->all());
         return response()->json($appointment);
     }
 
-    public function show(Appointment $appointment){
+    public function show($id){
+        $appointment=Appointment::find($id);
         return response()->json($appointment);
     }
 
-    public function update(Request $request,Appointment $appointment){
-        $request->validate([
-            'name'=>'required',
-            'email'=>'required|email',
-            'date'=>'required|date',
-            'service'=>'required'
-        ]);
+    public function update(Request $request, $id){
+        $appointment=Appointment::find($id);
         $appointment->update($request->all());
         return response()->json($appointment);
     }
 
-    public function destroy(Appointment $appointment){
+    public function destroy($id){
+        $appointment=Appointment::find($id);
         $appointment->delete();
-        return response()->json(null,204);
+        return response()->json(['message' => 'Appointment deleted successfully']);
     }
-    
+       
 }

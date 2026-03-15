@@ -15,34 +15,43 @@ class RegionController extends Controller
 
     public function store(Request $request)
     {
-        $region = new Region();
-        $region->name = $request->name;
-        $region->save();
+        $request->validate([
+            'name' => 'required|string|max:255',
+            "code"=>"required|string|max:255|unique:regions"
+        ]);
+        $region = Region::create($request->all());
+        return response()->json($region, 201);
+    }
 
+    public function show(Region $region)
+    {
         return response()->json($region);
     }
 
-    public function destroy($id)
+    public function update(Request $request, Region $region)
     {
-        $region = Region::find($id);
-        $region->delete();
+        $request->validate([
+            'name' => 'string|max:255',
+            "code"=>"string|max:255|unique:regions"
+        ]);
+        $region->update($request->all());
+        return response()->json($region);
+    }
 
+    public function destroy(Region $region)
+    {
+        $region->delete();
         return response()->json(null, 204);
     }
-   
-    public function show($id)
-    {
-        $region = Region::find($id);
-        return response()->json($region);
-    }
 
-    public function update(Request $request, $id)
+    public function getProvinces(Region $region)
     {
-        $region = Region::find($id);
-        $region->name = $request->name;
-        $region->save();
-
-        return response()->json($region);
+        return response()->json($region->provinces);
     }
      
+    public function getDistricts(Region $region)
+    {
+        return response()->json($region->districts);
+    }
+      
 }

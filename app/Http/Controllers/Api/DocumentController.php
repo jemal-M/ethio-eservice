@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class DocumentController extends Controller
 {
-    public function index()
+     public function index()
     {
         $documents = Document::all();
         return response()->json($documents);
@@ -16,11 +16,10 @@ class DocumentController extends Controller
 
     public function store(Request $request)
     {
-
         $document = Document::create($request->all());
         return response()->json($document, 201);
     }
-     
+
     public function show(Document $document)
     {
         return response()->json($document);
@@ -42,5 +41,5 @@ class DocumentController extends Controller
         $document = Document::where('name','like','%'.$name.'%')->get();
         return response()->json($document);
     }
-     
+      
 }

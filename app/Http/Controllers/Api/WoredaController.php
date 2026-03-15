@@ -19,13 +19,12 @@ class WoredaController extends Controller
         $woreda = Woreda::find($id);
         return response()->json($woreda);
     }
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $request->validate($request, [
             'name' => 'required',
             'zone_id' => 'required'
         ]);
-        $woreda = Woreda::create($request->all());
+                $woreda = Woreda::create($request->all());
         return response()->json($woreda, 201);
     }
     public function update(Request $request, $id)
@@ -44,9 +43,13 @@ class WoredaController extends Controller
         $woreda->delete();
         return response()->json(null, 204);
     }
-    public function getZoneWoredas($zone_id)
+     public function getZoneWoredas($zone_id)
     {
         $woredas = Woreda::where('zone_id',$zone_id)->get();
+        return response()->json($woredas);
+    }
+    public function search($name){
+        $woredas = Woreda::where('name', 'like', '%'.$name.'%')->get();
         return response()->json($woredas);
     }
     

@@ -3,85 +3,59 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $users = \App\Models\User::all();
-        return response()->json(
-            [
-                'success' => true,
-                'data' => $users
-            ]
-        );
+        $users = User::all();
+        return response()->json($users);
     }
-    public function  show($id)
+
+    public function show(User $user)
     {
-        $user = \App\Models\User::find($id);
-        if (!$user) {
-            return response()->json(
-                [
-                    'success' => false,
-                    'message' => 'User not found'
-                ]
-            );
-        }
-        return response()->json(
-            [
-                'success' => true,
-                'data' => $user
-            ]
-        );
+        return response()->json($user);
     }
-    public function destroy($id)
+
+    public function destroy(User $user)
     {
-        $user = \App\Models\User::find($id);
-        if (!$user) {
-            return response()->json(
-                [
-                    'success' => false,
-                    'message' => 'User not found'
-                ]
-            );
-        }
         $user->delete();
-        return response()->json(
-            [
-                'success' => true,
-                'message' => 'User deleted successfully'
-            ]
-        );
+        return response()->json(null, 204);
     }
-     public function store(Request $request)
-      {
-          $user = \App\Models\User::create($request->all());
-          return response()->json(
-              [
-                  'success' => true,
-                  'data' => $user
-              ]
-          );
-      }
-     public function update(Request $request, $id)
-      {
-          $user = \App\Models\User::find($id);
-          if (!$user) {
-              return response()->json(
-                  [
-                      'success' => false,
-                      'message' => 'User not found'
-                  ]
-              );
-          }
-          $user->update($request->all());
-          return response()->json(
-              [
-                  'success' => true,
-                  'data' => $user
-              ]
-          );
-      }
-      
+    public function store(Request $request){
+          
+        $user = User::create($request->all());
+        return response()->json($user, 201);
+
+    }
+     
+    public function update(Request $request, User $user)
+    {
+        $user->update($request->all());
+        return response()->json($user, 200);
+    }
+
+    public function search($name){
+        return response()->json(User::where('name','like','%'.$name.'%')->get());
+    }
+
+    public function searchEmail($email){
+        return response()->json(User::where('email', 'like', '%'.$email.'%')->get());
+    }
+
+    public function searchId($id){
+        return response()->json(User::where('id', '=', $id)->get());
+    }
+
+    public function searchName($name){
+        return response()->json(User::where('name', 'like', '%'.$name.'%')->get());
+    }
+
+    public function searchNameEmail($name, $email){
+        return response()->json(User::where('name', 'like', '%'.$name.'%')->where('email', 'like', '%'.$email.'%')->get());
+    }
+       
+
 }

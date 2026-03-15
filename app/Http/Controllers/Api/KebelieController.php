@@ -10,47 +10,31 @@ class KebelieController extends Controller
 {
     public function index()
     {
-        return "hello world";
+        $kebelies = Kebelie::all();
+        return response()->json($kebelies);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|unique:kebelies',
-            'woreda_id'=>'required|exists:woredas,id'
-        ]);
-        Kebelie::create($request->all());
-        return response()->json(['status'=>true,'message'=>'kebelie created successfully']);
+        $kebelie = Kebelie::create($request->all());
+        return response()->json($kebelie, 201);
     }
 
-    public function getKebelie($id)
+    public function show(Kebelie $kebelie)
     {
-        $kebelie=Kebelie::where('woreda_id',$id)->get();
-        return response()->json(['status'=>true, 'data'=>$kebelie]);
+        return response()->json($kebelie);
     }
 
-    public function show($id)
+    public function update(Request $request, Kebelie $kebelie)
     {
-        $kebelie=Kebelie::find($id);
-        return response()->json(['status'=>true, 'data'=>$kebelie]);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'required|unique:kebelies,name,'.$id,
-            'woreda_id'=>'required|exists:woredas,id'
-        ]);
-        $kebelie=Kebelie::find($id);
         $kebelie->update($request->all());
-        return response()->json(['status'=>true, 'message'=>'kebelie updated successfully']);
-    }
-
-    public function destroy($id)
-    {
-        $kebelie=Kebelie::find($id);
-        $kebelie->delete();
-        return response()->json(['status'=>true, 'message'=>'kebelie deleted successfully']);
+        return response()->json($kebelie);
     }
     
+    public function destroy(Kebelie $kebelie)
+    {
+        $kebelie->delete();
+        return response()->json(null, 204);
+    }
+     
 }

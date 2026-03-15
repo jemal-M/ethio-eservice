@@ -11,46 +11,30 @@ class OfficeController extends Controller
     public function index()
     {
         $offices = Office::all();
-        return response()->json($offices);
+        return response()->json(['message' => 'Hello from Office API','offices'=>$offices]);
+    }
+
+    public function store(Request $request)
+    {
+        $office = Office::create($request->all());
+        return response()->json(['message' => 'Office created successfully', 'office'=>$office]);
     }
 
     public function show(Office $office)
     {
-        return response()->json($office);
+        return response()->json(['message' => 'Office retrieved successfully', 'office'=>$office]);
     }
-
-    public function nearby(Request $request)
-    {
-        $offices = Office::nearby($request->longitude, $request->latitude)->get();
-        return response()->json($offices);
-    }
-     public function search(Request $request)
-    {
-        $offices = Office::search($request->name)->get();
-        return response()->json($offices);
-    }
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-            'department_id' => 'required',
-        ]);
-        $office = Office::create($request->all());
-        return response()->json($office, 201);
-    }
+     
     public function update(Request $request, Office $office)
     {
-        $request->validate([
-            'name' => 'required',
-            'department_id' => 'required',
-        ]);
         $office->update($request->all());
-        return response()->json($office);
+        return response()->json(['message' => 'Office updated successfully', 'office'=>$office]);
     }
+     
     public function destroy(Office $office)
     {
         $office->delete();
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Office deleted successfully', 'office'=>$office]);
     }
      
 }
