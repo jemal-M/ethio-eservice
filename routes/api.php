@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\KebelieController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\RegionController;
@@ -75,6 +76,11 @@ Route::get('/user', function (Request $request) {
      Route::put('/service_requests/{id}', [ApiUserController::class, 'update_service_request']);
      Route::delete('/service_requests/{id}', [ApiUserController::class, 'cancel_service_request']);
      
+     Route::get('/documents',[DocumentController::class, 'index']);
+     Route::post('/documents', [DocumentController::class, 'store']);
+     Route::get('/documents/{id}', [DocumentController::class, 'show']);
+     Route::put('/documents/{id}', [DocumentController::class, 'update']);
+     Route::delete('/documents/{id}', [DocumentController::class, 'destroy']);
      
 
 
