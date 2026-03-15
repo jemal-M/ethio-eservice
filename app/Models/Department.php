@@ -11,4 +11,9 @@ class Department extends Model
     {
         return $this->hasMany('App\Models\User');
     }
+    public function office(){
+          
+        return $this->belongsTo('App\Models\Office');
+
+    }
 }
